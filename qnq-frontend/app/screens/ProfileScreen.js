@@ -19,32 +19,59 @@ import { API_URL, USER_TOKEN } from "../constants";
 
 export default function ProfileScreen({ navigation }) {
   const [reviewCount, setReviewCount] = useState("-");
+  const [myRank, setMyRank] = useState("#");
   const { user } = useContext(UserContext);
 
-  useEffect(() => {
-    const getReviewCount = async () => {
-      fetch(API_URL + "reviews/me/count/", {
+  const getReviewCount = async () => {
+    fetch(API_URL + "reviews/me/count/", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+      .then((jsonResponse) => jsonResponse.json())
+      .then((response) => {
+        if (response.error) {
+          return;
+        }
+
+        setReviewCount(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const loadMyRank = async () => {
+    try {
+      const jsonResponse = await fetch(API_URL + `leaderboard/my`, {
         method: "GET",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
-      })
-        .then((jsonResponse) => jsonResponse.json())
-        .then((response) => {
-          if (response.error) {
-            return;
-          }
+      });
 
-          setReviewCount(response);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    };
+      if (jsonResponse.status >= 400) {
+        console.error("Error wile fetching rank. Response was:");
+        console.log(jsonResponse);
+        return;
+      }
 
+      const rank = await jsonResponse.json();
+
+      setMyRank(rank);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
     getReviewCount();
+    loadMyRank();
   }, []);
 
   return (
@@ -76,16 +103,16 @@ export default function ProfileScreen({ navigation }) {
         </View>
       </View>
       <View style={styles.userMetaDataView}>
-        <View style={styles.userMetaDataBox}>
+        {/*<View style={styles.userMetaDataBox}>
           <Title>#</Title>
           <Caption>Trust Factor</Caption>
-        </View>
+        </View>*/}
         <View style={styles.userMetaDataBox}>
           <Title>{reviewCount}</Title>
           <Caption>Reviews</Caption>
         </View>
         <View style={[styles.userMetaDataBox, styles.userMetaDataBoxLast]}>
-          <Title>#</Title>
+          <Title>{myRank}</Title>
           <Caption>Leaderboard</Caption>
         </View>
       </View>
@@ -96,7 +123,7 @@ export default function ProfileScreen({ navigation }) {
             <Text style={styles.rowText}>Favourite Places</Text>
           </View>
         </TouchableRipple>*/}
-        <TouchableRipple
+        {/*<TouchableRipple
           onPress={() => {
             navigation.navigate("EditProfile");
           }}
@@ -111,19 +138,20 @@ export default function ProfileScreen({ navigation }) {
             <Icon name="chart-timeline-variant" color="#bababa" size={25} />
             <Text style={styles.rowText}>My Reviews</Text>
           </View>
-        </TouchableRipple>
+        </TouchableRipple>*/}
         {/*<TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="share" color="#bababa" size={25} />
             <Text style={styles.rowText}>Share with Friend!</Text>
           </View>
         </TouchableRipple>*/}
+        {/*
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="power-settings" color="#bababa" size={25} />
             <Text style={styles.rowText}>Settings</Text>
           </View>
-        </TouchableRipple>
+        </TouchableRipple>*/}
       </View>
     </SafeAreaView>
   );
