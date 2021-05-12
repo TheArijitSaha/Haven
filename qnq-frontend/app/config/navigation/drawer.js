@@ -39,7 +39,7 @@ const CustomDrawer = (props) => {
             <Text style={styles.drawerProfileName}>
               {props.user ? props.user.name : ""}
             </Text>
-            <Text style={styles.drawerProfileRating}>rating</Text>
+            <Text style={styles.drawerProfileRating}></Text>
           </View>
         </SafeAreaView>
         <DrawerItemList {...props} />

@@ -10,7 +10,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import MapView from "react-native-maps";
 import Icon from "react-native-vector-icons/Octicons";
@@ -28,16 +28,16 @@ export default function HomeScreen({ navigation }) {
   const isOpen = useIsDrawerOpen();
 
   const handlePoiClick = ({
-    nativeEvent: { coordinate, position, placeId, name }
+    nativeEvent: { coordinate, position, placeId, name },
   }) => {
     navigation.navigate("Location", {
-      place: { coordinate, id: placeId, name }
+      place: { coordinate, id: placeId, name },
     });
   };
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestPermissionsAsync();
+      let { status } = await Location.requestBackgroundPermissionsAsync();
       if (status !== "granted") {
         // setErrorMsg('Permission to access location was denied');
         return;
@@ -50,7 +50,7 @@ export default function HomeScreen({ navigation }) {
             latitude: latitude,
             longitude: longitude,
             latitudeDelta: 0.05,
-            longitudeDelta: 0.05
+            longitudeDelta: 0.05,
           });
         }
       );
@@ -71,7 +71,7 @@ export default function HomeScreen({ navigation }) {
           showsUserLocation={true}
           style={{
             height: mapHeight,
-            width: "100%"
+            width: "100%",
           }}
         />
       ) : (
@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     // But, the problem with this is that the mylocation button seems
     // to be unmovable and gets covered in this way. Find a way to fix
     // this issue
-    marginTop: Constants.statusBarHeight || 0
+    marginTop: Constants.statusBarHeight || 0,
   },
   centeredText: {
-    textAlign: "center"
-  }
+    textAlign: "center",
+  },
 });
