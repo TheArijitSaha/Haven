@@ -93,6 +93,10 @@ router.get(
           "users._id": mongoose.Types.ObjectId(id),
         });
 
+      if (data.length < 1) {
+        return res.json(null);
+      }
+
       res.json(data[0].rank + 1);
     } catch (e) {
       next(e);

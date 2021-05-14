@@ -8,7 +8,7 @@ import Users, { User } from "../../../models/users";
 const router = express.Router();
 
 // POST new user (auth optional, everyone has access)
-router.post("/", (req: Request, res: Response, next: NextFunction) => {
+router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   const {
     body: { user },
   }: { body: { user: User & { password: string } } } = req;
@@ -31,14 +31,22 @@ router.post("/", (req: Request, res: Response, next: NextFunction) => {
 
   const finalUser = new Users(user);
 
-  console.log(finalUser);
-
   finalUser.setPassword(user.password);
 
-  return finalUser
-    .save()
-    .then((finalUser) => res.json({ user: finalUser.toAuthJSON() }))
-    .catch(next);
+  try {
+    const createdUser = await finalUser.save();
+
+    return res.json({ user: createdUser.toAuthJSON() });
+  } catch (e) {
+    // If the error is caused due to duplicate meme entry being requested,
+    // return Response Status 409: Conflict
+    if (e.name === "MongoError" && e.code === 11000) {
+      res.status(409).json({ error: "The given email is already registered!" });
+      return;
+    }
+
+    next(e);
+  }
 });
 
 // POST login (Auth optional, everyone has access)

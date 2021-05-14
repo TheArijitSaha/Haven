@@ -157,6 +157,13 @@ export default function App() {
               return;
             }
 
+            if (response.message) {
+              console.info(response.message);
+              // TODO: show alert in input boxes itself or login form addition
+              Alert.alert(response.message);
+              return;
+            }
+
             // Persist token in AsyncStorage and then dispatch SIGN_IN action
             AsyncStorage.setItem(USER_TOKEN, response.user.token).then(() => {
               dispatch({
