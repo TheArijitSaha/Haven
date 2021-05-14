@@ -15,7 +15,6 @@ import {
 import { useIsDrawerOpen } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 
-import StarRating from "../components/StarRating";
 import ReviewItem from "../components/ReviewItem";
 import styles from "../styles/location-styles";
 import { API_URL } from "../constants";

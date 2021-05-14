@@ -84,7 +84,7 @@ export default function ProfileScreen({ navigation }) {
             style={styles.userImage}
           />
           <View style={styles.userNameView}>
-            <Title>{user.name}</Title>
+            <Title>{user.name ?? "Username"}</Title>
           </View>
         </View>
         <View style={styles.userContactView}>
@@ -98,7 +98,7 @@ export default function ProfileScreen({ navigation }) {
           </View>
           <View style={styles.row}>
             <Icon name="email" size={26} color="#bbbbbb" />
-            <Text style={styles.rowText}>{user.email}</Text>
+            <Text style={styles.rowText}>{user.email ?? "User Email"}</Text>
           </View>
         </View>
       </View>

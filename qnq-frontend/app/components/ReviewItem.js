@@ -233,7 +233,6 @@ export default function ReviewItem({ review, standalone }) {
             <View style={styles.reviewScore}>
               <StarRating
                 size={18}
-                disabled={true}
                 initialRating={review.score}
                 starCount={MAX_SCORE}
               />
@@ -309,7 +308,6 @@ export default function ReviewItem({ review, standalone }) {
           <View style={styles.reviewScore}>
             <StarRating
               size={25}
-              disabled={true}
               initialRating={review.score}
               starCount={MAX_SCORE}
             />

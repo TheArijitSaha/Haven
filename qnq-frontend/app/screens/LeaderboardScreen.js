@@ -3,14 +3,9 @@ import React, { useContext, useEffect, useReducer } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   ActivityIndicator,
-  //   Button,
-  //   Image,
-  //   ImageBackground,
   FlatList,
   StyleSheet,
   Text,
-  //   TextInput,
-  //   TouchableOpacity,
   View,
 } from "react-native";
 import { useIsDrawerOpen } from "@react-navigation/drawer";
@@ -117,7 +112,9 @@ export default function LeaderboardScreen() {
 
       const rank = await jsonResponse.json();
 
-      dispatch({ type: "UPDATE_MY_RANK", data: { rank } });
+      if (rank !== null) {
+        dispatch({ type: "UPDATE_MY_RANK", data: { rank } });
+      }
     } catch (e) {
       console.error(e);
     }
@@ -147,6 +144,13 @@ export default function LeaderboardScreen() {
           <Text style={styles.myRankLabel}>My Rank: </Text>
           <Text style={styles.myRank}>{myRank}</Text>
         </View>
+        {myRank === "-" && (
+          <View style={styles.myRankDisclaimer}>
+            <Text style={styles.myRankDisclaimerMessage}>
+              Create a review to show up on the leaderboard
+            </Text>
+          </View>
+        )}
         <FlatList
           data={users}
           renderItem={renderUser}
@@ -199,5 +203,16 @@ const styles = StyleSheet.create({
   myRank: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  myRankDisclaimer: {
+    paddingHorizontal: 10,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  myRankDisclaimerMessage: {
+    fontSize: 15,
+    textAlign: "center",
+    fontFamily: "sans-serif-thin",
   },
 });

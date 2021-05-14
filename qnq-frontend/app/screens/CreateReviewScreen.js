@@ -87,6 +87,7 @@ export default function LocationScreen({ route, navigation }) {
             initialRating={0}
             starCount={maxScore}
             onRatingChange={setReviewScore}
+            disabled={false}
           />
         </View>
 
@@ -144,6 +145,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: "20%",
     paddingTop: 10,
     marginTop: 10,
+    alignItems: "center",
   },
 
   reviewTextInput: {
