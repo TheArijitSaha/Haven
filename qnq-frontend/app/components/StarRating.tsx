@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/Octicons";
 
-const StarRating = (props) => {
-  const starSize = props.size == undefined ? 30 : props.size;
+type StarRatingProps = {
+  starSize?: number;
+  starCount?: number;
+  initialRating?: number;
+  disabled?: boolean;
+  onRatingChange?: (_: number) => void;
+};
 
-  const initialRating =
-    props.initialRating == undefined ? 0 : props.initialRating;
-  const starCount = props.starCount == undefined ? 5 : props.starCount;
-  const onRatingChange =
-    props.onRatingChange == undefined
-      ? (newRating) => {}
-      : props.onRatingChange;
-  const disabled = props.disabled;
-
+const StarRating = ({
+  onRatingChange = (_: number) => {},
+  initialRating = 0,
+  starSize = 30,
+  starCount = 5,
+  disabled = true,
+}: StarRatingProps) => {
   const [rating, setRating] = useState(initialRating);
 
   const stars = [];

@@ -1,30 +1,31 @@
 import React from "react";
 
-import {
-  // Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Octicons";
-import { useNavigation } from "@react-navigation/native";
+
+type RaterProps = {
+  iconName: string;
+  size: number;
+  color: string;
+  count: number;
+  onPressHandler: () => void;
+};
 
 export default function Rater({
   iconName,
   size,
   color,
   count,
-  onPressHandler
-}) {
+  onPressHandler,
+}: RaterProps) {
   const styles = StyleSheet.create({
     container: {
-      flexDirection: "row"
+      flexDirection: "row",
     },
     rateCount: {
       padding: 3,
-      color: color
-    }
+      color: color,
+    },
   });
 
   return (
