@@ -1,60 +1,66 @@
 import React, { useEffect, useState } from "react";
 
 import Constants from "expo-constants";
-import * as Location from "expo-location";
-import { StatusBar, setStatusBarStyle } from "expo-status-bar";
 import {
-  Button,
-  Dimensions,
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import MapView from "react-native-maps";
-import Icon from "react-native-vector-icons/Octicons";
-import { useNavigation } from "@react-navigation/native";
-import { useIsDrawerOpen } from "@react-navigation/drawer";
+  getCurrentPositionAsync,
+  requestForegroundPermissionsAsync,
+} from "expo-location";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView, StyleSheet, Text } from "react-native";
+import MapView, { MapEvent, PROVIDER_GOOGLE } from "react-native-maps";
+import { DrawerScreenProps, useIsDrawerOpen } from "@react-navigation/drawer";
 
-export default function HomeScreen({ navigation }) {
-  const [region, setRegion] = useState(null);
+// TODO get this from drawer.tsx
+type Props = DrawerScreenProps<{ Home: {}; Location: {} }, "Home">;
+
+export default function HomeScreen({ navigation }: Props) {
+  const [region, setRegion] = useState<
+    | undefined
+    | {
+        latitude: number;
+        longitude: number;
+        latitudeDelta: number;
+        longitudeDelta: number;
+      }
+  >(undefined);
   const [locationPermissionGranted, setLocationPermissionGranted] = useState(
     false
   );
+
   // For loading the mylocation button from the get go,
   // together with onMapReady function.
   const [mapHeight, setMapHeight] = useState("99%");
   const isOpen = useIsDrawerOpen();
 
   const handlePoiClick = ({
-    nativeEvent: { coordinate, position, placeId, name },
-  }) => {
+    nativeEvent: { coordinate, placeId, name },
+  }: MapEvent<{ placeId: string; name: string }>) => {
     navigation.navigate("Location", {
       place: { coordinate, id: placeId, name },
     });
   };
 
   useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
+    const loadLocation = async () => {
+      const { status } = await requestForegroundPermissionsAsync();
       if (status !== "granted") {
         // setErrorMsg('Permission to access location was denied');
         return;
       }
       setLocationPermissionGranted(true);
 
-      Location.getCurrentPositionAsync({}).then(
-        ({ coords: { latitude, longitude } }) => {
-          setRegion({
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
-          });
-        }
-      );
-    })();
+      const {
+        coords: { latitude, longitude },
+      } = await getCurrentPositionAsync({});
+      setRegion({
+        latitude: latitude,
+        longitude: longitude,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+    };
+
+    loadLocation();
   }, []);
 
   return (
@@ -67,6 +73,7 @@ export default function HomeScreen({ navigation }) {
           onMapReady={() => setMapHeight("100%")}
           region={region}
           showsCompass={false}
+          provider={PROVIDER_GOOGLE}
           showsMyLocationButton={true}
           showsUserLocation={true}
           style={{

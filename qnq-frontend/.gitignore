@@ -3,3 +3,4 @@ node_modules/
 .expo/
 haven.jks
 debug.log
+app.json
